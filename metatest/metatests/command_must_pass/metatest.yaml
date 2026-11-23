@@ -1,0 +1,14 @@
+project:
+  name: baseline_command_must_pass
+  language: command
+  build_cmd: ""
+  test_cmd: "python check.py"
+  test_result_format: exit_code
+  source_roots: []
+  test_roots: []
+  parallelism: 1
+  timeout_sec: 30
+  flaky:
+    enabled: false
+report:
+  formats: []

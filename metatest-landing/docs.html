@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>文档 · MetaTest</title>
+<meta name="description" content="MetaTest 文档：核心概念、变异测试状态定义、元测试自检基准、适配器协议、命令参考、CLI 退出码、CI 集成与安全模型。" />
+<meta property="og:title" content="文档 · MetaTest" />
+<meta property="og:description" content="MetaTest 文档：核心概念、变异测试状态定义、元测试自检基准、适配器协议、命令参考、CLI 退出码、CI 集成与安全模型。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://37ljik33e4m6n2cj4o6.traesite.cn/docs.html" />
+<meta property="og:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="文档 · MetaTest" />
+<meta name="twitter:description" content="MetaTest 完整文档：概念、命令、退出码、适配器、CI 与安全模型。" />
+<meta name="twitter:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" />
+<link rel="canonical" href="https://37ljik33e4m6n2cj4o6.traesite.cn/docs.html" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="./"><span class="mark">M</span>MetaTest</a>
+    <nav class="nav-links">
+      <a href="./" data-page="index.html">首页</a>
+      <a href="docs.html" data-page="docs.html">文档</a>
+      <a href="console.html" data-page="console.html">控制台</a>
+      <a class="hide-sm" href="report.html">示例报告</a>
+      <a class="hide-sm" href="https://github.com/xiaoyaozisheng/TechSolutions------------" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="doc">
+  <div class="wrap">
+    <div class="doc-grid">
+      <aside class="toc">
+        <a href="#concepts">核心概念</a>
+        <a href="#selftest">元测试自检</a>
+        <a href="#adapters">适配器协议</a>
+        <a href="#commands">命令参考</a>
+        <a href="#exit-codes">CLI 退出码</a>
+        <a href="#ci">CI 集成</a>
+        <a href="#structure">项目结构</a>
+        <a href="#security">安全模型</a>
+        <a href="#faq">FAQ</a>
+      </aside>
+
+      <div class="doc-body">
+        <h1 style="font-size:34px">文档</h1>
+        <p class="lead">完整命令、概念与配置参考。快速上手请看<a href="./#start">首页 · 快速开始</a>。</p>
+
+        <h2 id="concepts">核心概念</h2>
+        <h3>变异测试状态</h3>
+        <div class="scroll">
+          <table>
+            <tr><th>状态</th><th>含义</th></tr>
+            <tr><td class="ok">killed</td><td>测试失败 —— 测试发现了变异（好）</td></tr>
+            <tr><td class="bad">survived</td><td>测试通过 —— 漏测（报告会给出代码位置与上下文）</td></tr>
+            <tr><td class="warn">timeout</td><td>执行超时（单独统计）</td></tr>
+            <tr><td>equivalent</td><td>等价变异（人工标记 / 启发式，不计入得分）</td></tr>
+            <tr><td>error</td><td>构建 / 执行错误（不计入得分但需报告）</td></tr>
+          </table>
+        </div>
+        <h3>变异得分</h3>
+        <div class="formula">Mutation Score = killed / (killed + survived + timeout)</div>
+        <p class="muted" style="font-size:14px">等价变异体（equivalent）从分母排除。</p>
+
+        <h2 id="selftest">元测试自检（差异点）</h2>
+        <p><code>metatest selftest</code> 运行内置 17 个已知答案基准项目，验证平台不会把失败误报为通过、把跳过误判为成功。自检失败 → 退出码 3 → CI 必须失败。</p>
+        <div class="scroll">
+          <table>
+            <tr><th>类型</th><th>已知答案</th></tr>
+            <tr><td><code>py_must_fail</code> / <code>c_must_fail</code></td><td>测试必失败 → 平台必须判 fail</td></tr>
+            <tr><td><code>py_must_pass</code> / <code>c_must_pass</code> / <code>command_must_pass</code></td><td>测试必通过 → 平台必须判 pass</td></tr>
+            <tr><td><code>py_skip</code> / <code>py_all_skipped</code></td><td>跳过 ≠ 通过 → 必须判 pass_with_skips / all_skipped</td></tr>
+            <tr><td><code>py_timeout</code></td><td>必超时 → 平台必须判 timeout 并终止进程</td></tr>
+            <tr><td><code>py_weak_assert</code></td><td>弱断言必须被质量分析标记</td></tr>
+            <tr><td><code>py_flaky</code></td><td>交替失败必须被 flaky 检测识别</td></tr>
+            <tr><td><code>py_mutant_kill</code> / <code>c_mutant_kill</code> / <code>py_mutant_survive</code></td><td>指定变异必须被杀死 / 存活</td></tr>
+            <tr><td><code>py_equivalent_manual</code></td><td>人工标记的等价变异 → equivalent（不计入得分分母）</td></tr>
+            <tr><td><code>py_equivalent_suspect</code></td><td>dunder 内返回值变异 → 必须带「疑似等价」启发式标记</td></tr>
+            <tr><td><code>c_lexical_guard</code></td><td>宏 / 字符串 / 注释区域零变异体、零 error（词法误伤防护）</td></tr>
+          </table>
+        </div>
+
+        <h2 id="adapters">适配器协议（多语言接入）</h2>
+        <p>统一接口：<code>detect() / prepare() / generate_mutants() / run_tests() / parse_result() / cleanup()</code></p>
+        <ul>
+          <li><b>python</b>：AST 变异 + pytest / unittest（JUnit XML 统一结果输入）</li>
+          <li><b>c</b>：tree-sitter 变异引擎（无依赖时词法级回退），支持 gcc / Make / CMake+CTest</li>
+          <li><b>command</b>：任意项目命令级接入——提供 build / test 命令与结果格式即可获得 flaky 检测、结果校验与报告；配置 <code>mutation.rule_files</code> 后还能做规则化变异</li>
+          <li><b>第三方</b>：通过插件模板新增变异算子或适配器，运行 <code>metatest plugins template</code> 导出模板</li>
+        </ul>
+
+        <h2 id="commands">命令参考</h2>
+        <div class="scroll">
+          <table>
+            <tr><th>命令</th><th>说明</th></tr>
+            <tr><td class="k">metatest init [dir]</td><td>生成 metatest.yaml（探测语言 + 推断布局 + 登记信任）</td></tr>
+            <tr><td class="k">metatest run [--incremental --diff-ref main]</td><td>全量 / 增量变异评估</td></tr>
+            <tr><td class="k">metatest run --test-selection</td><td>测试关联筛选：只跑覆盖变异行的测试（仅 Python/pytest）</td></tr>
+            <tr><td class="k">metatest selftest [--list]</td><td>元测试自检</td></tr>
+            <tr><td class="k">metatest flaky --runs 3 --isolate</td><td>flaky 检测 + 隔离分类（孤立 flaky vs 顺序依赖）</td></tr>
+            <tr><td class="k">metatest quality [--strict]</td><td>弱断言 / 重复测试 / flaky 分析</td></tr>
+            <tr><td class="k">metatest report --results results.json --format html --out report.html</td><td>生成 HTML / JSON / JUnit 报告</td></tr>
+            <tr><td class="k">metatest ci github / gitlab</td><td>输出官方 CI 模板</td></tr>
+            <tr><td class="k">metatest ui [--project DIR --port N]</td><td>启动本地 Web 控制台</td></tr>
+            <tr><td class="k">metatest plugins template</td><td>导出插件模板</td></tr>
+            <tr><td class="k">metatest allow / deny</td><td>登记或撤销对某配置的信任（用户级存储）</td></tr>
+          </table>
+        </div>
+
+        <h2 id="exit-codes">CLI 退出码</h2>
+        <div class="scroll">
+          <table>
+            <tr><th>退出码</th><th>含义</th></tr>
+            <tr><td class="k">0</td><td>成功且达到质量门禁阈值</td></tr>
+            <tr><td class="warn">1</td><td>质量门禁失败（变异得分低于阈值 / flaky / 弱断言超限）</td></tr>
+            <tr><td class="bad">2</td><td>平台 / 配置错误（配置无效、环境缺失、基线测试失败、不可信配置）</td></tr>
+            <tr><td class="bad">3</td><td>元测试自检失败（平台自身不可信，CI 必须失败）</td></tr>
+          </table>
+        </div>
+
+        <h2 id="ci">CI 集成</h2>
+        <div class="code-wrap"><pre><code>metatest ci github     # 输出官方 GitHub Actions 模板
+metatest ci gitlab     # 输出官方 GitLab CI 模板</code></pre></div>
+        <p>界面里看到的通过与否，CI 里也是同样结论——每个动作最终落到 CLI 参数，结果来自同一份 <code>.metatest/report/results.json</code>，退出码语义一致。</p>
+        <div class="callout warn">CI 中命令执行需一次性放行：可用 <code>--allow-commands</code> 或环境变量 <code>METATEST_ALLOW_COMMANDS=1</code>。</div>
+
+        <h2 id="structure">项目结构</h2>
+        <div class="arch-tree">metatest/
+├── cli/            # CLI 入口（init/run/selftest/flaky/quality/report/plugins/ci/ui）
+├── core/           # 调度引擎、沙箱、缓存、增量筛选、质量分析
+├── adapters/       # python / c / command 适配器 + 插件注册
+├── mutators/       # python AST 变异器、c tree-sitter 变异器
+├── metatests/      # 已知答案基准项目库（17 个）
+├── plugins/        # 插件加载与模板
+├── report/         # HTML / JSON / JUnit XML 报告
+└── web/            # 本地 Web 控制台：HTTP API + SSE 日志 + 前端静态资源</div>
+        <div class="note">软件化交付：<code>metatest ui</code> 启动本地控制台，<code>python scripts/build_exe.py</code> 产出单文件 <code>dist/MetaTest.exe</code>（约 25 MB，双击即用）。</div>
+
+        <h2 id="security">安全模型</h2>
+        <p>控制台会执行 <code>metatest.yaml</code> 里的命令，保留 CLI 信任模型，并额外加三道本地防护：</p>
+        <ol class="muted" style="font-size:14.5px;line-height:2">
+          <li><b>仅回环监听 + Host 校验</b>：默认 <code>127.0.0.1</code>，拒绝非 localhost 的 Host 头，防 DNS rebinding。</li>
+          <li><b>写操作自定义头</b> <code>X-Metatest-Client: web</code>：跨站表单无法伪造。</li>
+          <li><b>命令执行需显式确认</b>：信任存用户级 <code>~/.metatest/trusted.json</code>，仓库内容无法自我授权；报告读取限制在项目 <code>.metatest/report</code> 目录内，防路径穿越。</li>
+        </ol>
+        <div class="callout warn">不要把 <code>--host</code> 改成 <code>0.0.0.0</code>：该服务没有鉴权，只面向本机单用户（MVP 不做 SaaS）。团队共享走 CI 集成。</div>
+
+        <h2 id="faq">FAQ</h2>
+        <details class="faq"><summary>支持哪些语言？</summary><div class="body">内置 Python、C、Command 适配器；通过插件模板可扩展。详见<a href="#adapters">适配器协议</a>。</div></details>
+        <details class="faq"><summary>是否会上传我的代码？</summary><div class="body">不会。本地优先，所有执行在你的机器 / 内网完成，不向外部服务发送代码。</div></details>
+        <details class="faq"><summary>如何接入 GitHub Actions / GitLab CI？</summary><div class="body"><code>metatest ci github</code> / <code>metatest ci gitlab</code> 输出官方模板，按退出码设置门禁。</div></details>
+        <details class="faq"><summary>自检失败怎么办？</summary><div class="body">退出码 3，CI 必须失败。检查环境（解释器 / 依赖），或提交 issue 附自检日志。</div></details>
+        <details class="faq"><summary>等价变异体怎么处理？</summary><div class="body">等价变异不计入得分分母，可人工标记或启发式提示。</div></details>
+        <details class="faq"><summary>「基线测试 0 个用例」是什么原因？</summary><div class="body">几乎都是解释器问题：PATH 上的 <code>python</code> 不是装了 pytest 的那个。用 <code>metatest python --set &lt;路径&gt;</code> 绑定，或在 <code>metatest.yaml</code> 写绝对路径。</div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="./">首页</a> · <a href="docs.html">文档</a> · <a href="console.html">控制台</a> · <a href="report.html">示例报告</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

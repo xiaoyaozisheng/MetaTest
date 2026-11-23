@@ -1,0 +1,21 @@
+case_id: py_mutant_kill
+description: 变异必杀死基准：强测试套件必须杀死算术/关系/边界/异常删除变异
+kind: mutation
+expect:
+  mutants:
+    - path: src/maths.py
+      operator: arithmetic
+      lineno: 2        # a + b → a - b
+      status: killed
+    - path: src/maths.py
+      operator: relational
+      lineno: 6        # is_leap 的 == / != 交换
+      status: killed
+    - path: src/maths.py
+      operator: boundary_value
+      lineno: 6        # 闰年判断常量 +1
+      status: killed
+    - path: src/maths.py
+      operator: exception_removal
+      lineno: 19       # raise ZeroDivisionError("除零") → pass
+      status: killed

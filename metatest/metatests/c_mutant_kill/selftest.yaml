@@ -1,0 +1,13 @@
+case_id: c_mutant_kill
+description: C 变异必杀死基准：C harness 必须杀死算术/关系变异（缺编译器时跳过）
+kind: mutation
+expect:
+  mutants:
+    - path: src/calc.c
+      operator: arithmetic
+      lineno: 4        # a + b → a - b
+      status: killed
+    - path: src/calc.c
+      operator: relational
+      lineno: 8        # is_leap 的 == / != 交换
+      status: killed

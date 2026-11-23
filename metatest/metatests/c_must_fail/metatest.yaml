@@ -1,0 +1,15 @@
+project:
+  name: baseline_c_must_fail
+  language: c
+  build_cmd: "gcc -Isrc -o calc_test.exe src/calc.c tests/calc_test.c"
+  test_result_format: exit_code
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 2
+  timeout_sec: 60
+  adapter:
+    test_binary: calc_test.exe
+  flaky:
+    enabled: false
+report:
+  formats: []

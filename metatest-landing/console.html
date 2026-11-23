@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>控制台 · MetaTest</title>
+<meta name="description" content="MetaTest 本地 Web 控制台：与 CLI 共用同一引擎与判定语义，中英双语、明暗主题。控制台为本地运行工具，不支持公网 SaaS 部署。" />
+<meta property="og:title" content="控制台 · MetaTest" />
+<meta property="og:description" content="MetaTest 本地 Web 控制台介绍与截图：与 CLI 共用同一引擎与判定语义。控制台为本地运行工具，不支持公网 SaaS 部署。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://37ljik33e4m6n2cj4o6.traesite.cn/console.html" />
+<meta property="og:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="控制台 · MetaTest" />
+<meta name="twitter:description" content="MetaTest 本地 Web 控制台介绍与截图。控制台为本地运行工具，不支持公网 SaaS 部署。" />
+<meta name="twitter:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" />
+<link rel="canonical" href="https://37ljik33e4m6n2cj4o6.traesite.cn/console.html" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="./"><span class="mark">M</span>MetaTest</a>
+    <nav class="nav-links">
+      <a href="./" data-page="index.html">首页</a>
+      <a href="docs.html" data-page="docs.html">文档</a>
+      <a href="console.html" data-page="console.html">控制台</a>
+      <a class="hide-sm" href="report.html">示例报告</a>
+      <a class="hide-sm" href="https://github.com/xiaoyaozisheng/TechSolutions------------" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="doc">
+  <div class="wrap">
+    <h1 style="font-size:34px">MetaTest 控制台</h1>
+    <p class="lead">不用记命令，打开界面就能选项目、跑变异评估、看漏测位置、做质量分析和元测试自检。控制台与 CLI 共用同一套引擎与判定语义。</p>
+
+    <div class="callout warn" style="margin:22px 0">
+      <b>部署边界说明：</b>控制台是<b>本地运行工具</b>，需要 Python 后端（<code>metatest/web</code>），设计为仅监听 <code>127.0.0.1</code>、无鉴权，<b>MVP 不做 SaaS、不支持公网部署</b>。本页是控制台的介绍与截图，不是在线可用的控制台实例。要使用控制台，请在本地安装后启动。
+    </div>
+
+    <h2 id="launch">启动方式</h2>
+    <div class="code-wrap"><pre><code>metatest ui                  # 已 pip install 时，自动开浏览器，默认 http://127.0.0.1:8777
+python -m metatest.web       # 源码目录下
+MetaTest.exe                 # 打包版（双击即用，约 25 MB）</code></pre></div>
+    <div class="scroll" style="margin-top:14px">
+      <table>
+        <tr><th>参数</th><th>说明</th></tr>
+        <tr><td class="k">--port N</td><td>指定端口（默认自动选择 8777 起的空闲端口）</td></tr>
+        <tr><td class="k">--host H</td><td>监听地址（默认 <code>127.0.0.1</code>，不建议改）</td></tr>
+        <tr><td class="k">--no-browser</td><td>不自动开浏览器（服务器 / 远程场景）</td></tr>
+        <tr><td class="k">--project DIR</td><td>启动后直接打开该目录</td></tr>
+      </table>
+    </div>
+
+    <h2 id="pages">界面导览</h2>
+    <p class="muted" style="font-size:14px">支持中英双语切换与明暗主题，纯离线静态资源（无 CDN、无外部字体）。</p>
+    <div class="shots" style="margin-top:18px">
+      <div class="shot"><img src="overview.png" alt="概览页" /><div class="cap"><b>概览</b> · 变异得分环 / KPI / 状态分布 / 文件得分表 / 引擎可信度</div></div>
+      <div class="shot"><img src="run.png" alt="变异评估页" /><div class="cap"><b>变异评估</b> · 运行选项 + 实时日志进度 + 变异体明细筛选</div></div>
+      <div class="shot"><img src="quality.png" alt="质量分析页" /><div class="cap"><b>质量分析</b> · flaky / 弱断言 / 重复 / 三轴评分 + 可操作建议</div></div>
+      <div class="shot"><img src="selftest.png" alt="元测试自检页" /><div class="cap"><b>元测试自检</b> · 17 个基准逐项结论（期望 vs 实际）+ 通过率</div></div>
+    </div>
+
+    <h2 id="boundary">为什么不做公网控制台</h2>
+    <p>控制台会执行 <code>metatest.yaml</code> 里的命令，因此安全模型建立在「仅本机」之上：</p>
+    <ul class="muted" style="font-size:14.5px;line-height:2">
+      <li>默认仅监听 <code>127.0.0.1</code>，拒绝非 localhost 的 Host 头，防 DNS rebinding</li>
+      <li>写操作要求自定义头 <code>X-Metatest-Client: web</code>，跨站无法伪造</li>
+      <li>命令执行需显式确认，<b>仓库内容无法自我授权</b></li>
+    </ul>
+    <div class="callout info">需要团队共享时，建议走 <a href="docs.html#ci">CI 集成</a>（退出码驱动门禁），而不是把控制台暴露到公网。</div>
+
+    <div class="row center" style="justify-content:center;margin-top:30px">
+      <a class="btn primary" href="./#start">返回首页 · 开始评估 →</a>
+      <a class="btn ghost" href="docs.html#security">查看完整安全模型</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="./">首页</a> · <a href="docs.html">文档</a> · <a href="console.html">控制台</a> · <a href="report.html">示例报告</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

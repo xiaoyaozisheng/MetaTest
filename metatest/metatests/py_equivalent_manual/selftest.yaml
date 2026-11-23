@@ -1,0 +1,14 @@
+case_id: py_equivalent_manual
+description: 等价变异基准（人工标记）：冗余语句变异必须被判 equivalent 并从得分分母排除
+kind: mutation
+expect:
+  mutants:
+    - path: src/norm.py
+      operator: statement_deletion
+      lineno: 2       # 删除 tuple 拷贝 → 行为变化 → killed
+      status: killed
+    - path: src/norm.py
+      operator: statement_deletion
+      lineno: 3       # 删除冗余 list 拷贝 → 语义等价 → equivalent
+      status: equivalent
+  max_errors: 0

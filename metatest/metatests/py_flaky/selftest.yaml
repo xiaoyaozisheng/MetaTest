@@ -1,0 +1,6 @@
+case_id: py_flaky
+description: flaky 基准：交替通过/失败的测试必须被 flaky 检测识别
+kind: flaky
+runs: 3
+expect:
+  flaky: true

@@ -1,0 +1,5 @@
+case_id: c_must_fail
+description: C 必失败基准：测试存在失败时判为 fail（不会把失败误报为通过）
+kind: test_run
+expect:
+  outcome: fail

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MetaTest · 用变异测试证明你的测试真的有效</title>
+<meta name="description" content="MetaTest 评估测试套件能否杀死变异体，检测测试退化，并用元测试自检保证判定可信。支持 Python / C / Command，本地优先，CI 退出码语义。" />
+<meta property="og:title" content="MetaTest · 用变异测试证明你的测试真的有效" />
+<meta property="og:description" content="变异测试驱动的测试有效性评估 + 元测试自检 + 多语言适配器。本地优先，CI 退出码语义。" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://37ljik33e4m6n2cj4o6.traesite.cn/" />
+<meta property="og:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" />
+<meta property="og:image:width" content="1920" />
+<meta property="og:image:height" content="1080" />
+<meta property="og:image:alt" content="MetaTest 产品分享图" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="MetaTest · 用变异测试证明你的测试真的有效" />
+<meta name="twitter:description" content="变异测试驱动的测试有效性评估 + 元测试自检 + 多语言适配器。本地优先，CI 退出码语义。" />
+<meta name="twitter:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" />
+<link rel="canonical" href="https://37ljik33e4m6n2cj4o6.traesite.cn/" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="./"><span class="mark">M</span>MetaTest</a>
+    <nav class="nav-links">
+      <a href="./" data-page="index.html">首页</a>
+      <a href="docs.html" data-page="docs.html">文档</a>
+      <a href="console.html" data-page="console.html">控制台</a>
+      <a class="hide-sm" href="docs.html#faq">FAQ</a>
+      <a class="hide-sm" href="https://github.com/xiaoyaozisheng/TechSolutions------------" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 首屏：价值 + 证据 + CTA -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-left">
+      <span class="pill"><span class="b"></span>变异测试 · 元测试自检 · 多语言适配器</span>
+      <h1>用变异测试，证明你的测试<span class="grad">真的有效</span>。</h1>
+      <p class="lead">MetaTest 评估测试套件能否杀死变异体，检测测试退化，并用元测试自检保证判定可信。</p>
+      <div class="row">
+        <a class="btn primary" href="#start">开始评估 →</a>
+        <a class="btn accent" href="report.html">查看示例报告</a>
+        <a class="btn ghost" href="docs.html">阅读文档</a>
+      </div>
+      <div class="trust">
+        <span><span class="dot"></span>支持 Python / C / Command 适配器</span>
+        <span><span class="dot"></span>17 个基准项目自检</span>
+        <span><span class="dot"></span>CI 退出码语义</span>
+        <span><span class="dot"></span>本地优先，数据不出内网</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="browser-frame">
+        <div class="browser-bar">
+          <span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span>
+          <span class="url">.metatest/report/report.html</span>
+        </div>
+        <iframe src="report.html" title="MetaTest 真实示例报告（可交互滚动）" loading="lazy"></iframe>
+      </div>
+      <a class="report-strip" href="report.html">
+        <span><b>91.7%</b> 变异得分</span>
+        <span><b>11</b>/12 已杀死</span>
+        <span><b class="warn">1</b> survived 漏测已定位</span>
+        <span class="arr">查看完整报告 →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 问题 -->
+<section id="why">
+  <div class="wrap">
+    <div class="section-title"><span class="n">问题</span><h2>测试通过，不等于测试有效</h2></div>
+    <p class="lead" style="margin-bottom:28px">普通测试工具回答「产品有没有 bug」。MetaTest 回答三个更上层的问题：</p>
+    <div class="grid grid-3 questions">
+      <div class="card q"><h3>现有测试是否有效？</h3><p>生成源码微小变异，看测试能否「杀死」它们——杀死越多，测试越能发现真实缺陷。</p></div>
+      <div class="card q"><h3>测试质量是否在退化？</h3><p>持续检出弱断言、flaky、重复测试与「高覆盖率低得分」，防止绿了却没测到。</p></div>
+      <div class="card q"><h3>测试工具本身是否可信？</h3><p>用 17 个已知答案的基准项目自检平台判断；自检失败，CI 必须失败。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 核心能力 -->
+<section id="capabilities">
+  <div class="wrap">
+    <div class="section-title"><span class="n">能力</span><h2>三类能力，一个差异点</h2></div>
+    <div class="grid grid-3">
+      <div class="card"><span class="tag">变异测试</span><h3>测试有效性评估</h3><p>对源码生成微小变异（<code>&gt;</code> → <code>&gt;=</code>、删语句、返回值替换），逐个运行测试套件，统计 killed / survived / timeout，给出变异得分。</p></div>
+      <div class="card"><span class="tag">质量分析</span><h3>测试退化检测</h3><ul><li>flaky 检测 + 隔离分类</li><li>弱断言识别</li><li>重复测试归一化</li><li>三轴评分：充分性 / 冗余 / 可维护性</li></ul></div>
+      <div class="card"><span class="tag">CI 集成</span><h3>门禁与退出码</h3><p>官方 GitHub Actions / GitLab CI 模板；退出码语义化，界面结论与 CI 完全一致。</p></div>
+    </div>
+    <div class="row center" style="justify-content:center">
+      <a class="btn primary" href="#start">开始评估 →</a>
+      <a class="btn ghost" href="docs.html#concepts">了解核心概念</a>
+    </div>
+  </div>
+</section>
+
+<!-- 证据 -->
+<section id="evidence">
+  <div class="wrap">
+    <div class="section-title"><span class="n">证据</span><h2>看到结果，而不是只听承诺</h2></div>
+    <div class="grid grid-2" style="align-items:center">
+      <div>
+        <p class="lead">一份真实的变异测试报告长这样：变异得分、killed / survived / timeout 分布、漏测位置与代码上下文，全部可操作。</p>
+        <div class="row">
+          <a class="btn accent" href="report.html">查看完整示例报告 →</a>
+        </div>
+        <div class="grid grid-3" style="margin-top:24px">
+          <div class="card" style="text-align:center"><div style="font-size:30px;font-weight:850;color:var(--accent)">91.7%</div><div class="muted" style="font-size:13px">示例项目变异得分</div></div>
+          <div class="card" style="text-align:center"><div style="font-size:30px;font-weight:850;color:var(--text)">12</div><div class="muted" style="font-size:13px">变异体 / 11 已杀死</div></div>
+          <div class="card" style="text-align:center"><div style="font-size:30px;font-weight:850;color:var(--warn)">1</div><div class="muted" style="font-size:13px">survived 漏测定位</div></div>
+        </div>
+      </div>
+      <figure class="figure">
+        <img src="overview.png" alt="MetaTest 控制台概览：变异得分环与 KPI" />
+        <figcaption class="cap">控制台概览 · 变异得分环 / KPI / 状态分布 / 文件得分</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 元测试自检：信任核心 -->
+<section id="selftest">
+  <div class="wrap">
+    <div class="trust-core">
+      <div class="section-title" style="margin-bottom:10px"><span class="n" style="background:rgba(52,211,153,.2);color:#a7f3d0">信任核心</span></div>
+      <h2>我们如何证明 MetaTest 自己可信？</h2>
+      <p class="lead">不靠「专业、准确」的空话——靠 17 个已知答案的基准项目逐项验证。</p>
+      <div class="grid grid-3" style="margin-top:26px">
+        <div class="stat"><div class="big">17</div><small>已知答案基准项目</small></div>
+        <div class="stat"><div class="big">3</div><small>自检失败 → 退出码 3 → CI 必须失败</small></div>
+        <div class="stat"><div class="big">0</div><small>误判容忍：失败不能报通过，跳过不能算成功</small></div>
+      </div>
+      <div class="grid grid-2" style="margin-top:26px">
+        <ul class="muted" style="font-size:14px;line-height:2">
+          <li><code>*_must_fail</code> / <code>*_must_pass</code>：必失败 / 必通过判定正确</li>
+          <li><code>py_skip</code> / <code>py_all_skipped</code>：跳过 ≠ 通过</li>
+          <li><code>py_timeout</code>：必超时并终止进程</li>
+          <li><code>py_weak_assert</code> / <code>py_flaky</code>：质量分析必须检出</li>
+        </ul>
+        <ul class="muted" style="font-size:14px;line-height:2">
+          <li><code>*_mutant_kill</code> / <code>*_mutant_survive</code>：指定变异死活准确</li>
+          <li><code>py_equivalent_*</code>：等价变异不计入得分分母</li>
+          <li><code>c_lexical_guard</code>：宏 / 字符串 / 注释区域零误伤</li>
+        </ul>
+      </div>
+      <div class="row">
+        <a class="btn accent" href="docs.html#selftest">查看完整自检基准 →</a>
+        <a class="btn ghost" href="selftest.png">看自检界面截图</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 快速开始 -->
+<section id="start">
+  <div class="wrap">
+    <div class="section-title"><span class="n">3 步</span><h2>快速开始</h2></div>
+    <p class="lead" style="margin-bottom:20px">先自检验证平台可信，再评估你的项目。完整命令见<a href="docs.html">文档</a>。</p>
+
+    <div data-tab-group="lang">
+      <div class="tabs">
+        <button class="tab active" data-tab="python">Python</button>
+        <button class="tab" data-tab="c">C</button>
+        <button class="tab" data-tab="cmd">通用 Command</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="lang" data-panel-value="python">
+        <div class="step"><div class="n">1</div><div class="b">
+          <h4>安装</h4>
+          <div class="code-wrap"><pre><code>git clone https://github.com/xiaoyaozisheng/TechSolutions------------ metatest && cd metatest && pip install -e .</code></pre></div>
+        </div></div>
+        <div class="step"><div class="n">2</div><div class="b">
+          <h4>先自检，再评估你的项目</h4>
+          <div class="code-wrap"><pre><code>metatest selftest            # 验证平台自身可信（17/17 通过）
+cd path/to/your/project
+metatest allow               # 显式信任该目录配置
+metatest run                 # 变异测试 + 报告（.metatest/report/report.html）</code></pre></div>
+        </div></div>
+        <div class="step"><div class="n">3</div><div class="b">
+          <h4>接入 CI</h4>
+          <p>生成官方 GitHub Actions / GitLab CI 模板，按退出码设置门禁。</p>
+          <a class="btn ghost sm" href="docs.html#ci">在 CI 中使用 →</a>
+        </div></div>
+      </div>
+
+      <div class="tab-panel" data-panel="lang" data-panel-value="c">
+        <div class="step"><div class="n">1</div><div class="b">
+          <h4>安装（含 C 变异依赖）</h4>
+          <div class="code-wrap"><pre><code>git clone https://github.com/xiaoyaozisheng/TechSolutions------------ metatest && cd metatest && pip install -e ".[c]"</code></pre></div>
+        </div></div>
+        <div class="step"><div class="n">2</div><div class="b">
+          <h4>初始化并评估 C 项目</h4>
+          <div class="code-wrap"><pre><code>metatest selftest
+cd path/to/your/c_project
+metatest init               # 探测语言并生成 metatest.yaml
+metatest allow
+metatest run</code></pre></div>
+        </div></div>
+        <div class="step"><div class="n">3</div><div class="b">
+          <h4>接入 CI</h4>
+          <a class="btn ghost sm" href="docs.html#ci">在 CI 中使用 →</a>
+        </div></div>
+      </div>
+
+      <div class="tab-panel" data-panel="lang" data-panel-value="cmd">
+        <div class="step"><div class="n">1</div><div class="b">
+          <h4>安装</h4>
+          <div class="code-wrap"><pre><code>git clone https://github.com/xiaoyaozisheng/TechSolutions------------ metatest && cd metatest && pip install -e .</code></pre></div>
+        </div></div>
+        <div class="step"><div class="n">2</div><div class="b">
+          <h4>用命令适配器接入任意项目</h4>
+          <p>在 <code>metatest.yaml</code> 里配置 build / test 命令与结果格式，即可获得 flaky 检测、结果校验与报告。</p>
+          <a class="btn ghost sm" href="docs.html#adapters">查看 Command 适配器配置 →</a>
+        </div></div>
+        <div class="step"><div class="n">3</div><div class="b">
+          <h4>接入 CI</h4>
+          <a class="btn ghost sm" href="docs.html#ci">在 CI 中使用 →</a>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="row center" style="justify-content:center;margin-top:30px">
+      <a class="btn primary" href="report.html">无需安装，先看示例报告 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CI / 部署边界 / 安全 -->
+<section id="ci-security">
+  <div class="wrap">
+    <div class="section-title"><span class="n">边界</span><h2>CI/CD、部署方式与安全</h2></div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>使用方式（MVP 不做 SaaS）</h3>
+        <ul>
+          <li><b>本地运行</b>：<code>metatest ui</code> 启动本地控制台，或直接用 CLI</li>
+          <li><b>CI 集成</b>：退出码驱动门禁，GitHub / GitLab 官方模板</li>
+          <li><b>私有化部署</b>：全部在你的机器 / 内网执行，数据不出内网</li>
+        </ul>
+        <div class="callout info" style="margin-top:12px">当前不提供在线 SaaS 服务；控制台为本地工具，不托管用户代码。</div>
+      </div>
+      <div class="card">
+        <h3>安全模型（默认只本机）</h3>
+        <ul>
+          <li>仅回环监听 <code>127.0.0.1</code>，拒绝非 localhost 的 Host 头，防 DNS rebinding</li>
+          <li>写操作要求自定义头 <code>X-Metatest-Client: web</code>，跨站无法伪造</li>
+          <li>命令执行需显式确认，信任存用户级，<b>仓库内容无法自我授权</b></li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="margin-top:30px">CI 退出码语义</h3>
+    <div class="scroll">
+      <table>
+        <tr><th>退出码</th><th>含义</th><th>CI 行为</th></tr>
+        <tr><td class="k">0</td><td>成功且达到质量门禁阈值</td><td class="ok">通过</td></tr>
+        <tr><td class="warn">1</td><td>质量门禁失败（变异得分低 / flaky / 弱断言超限）</td><td class="warn">失败</td></tr>
+        <tr><td class="bad">2</td><td>平台 / 配置错误</td><td class="bad">失败</td></tr>
+        <tr><td class="bad">3</td><td>元测试自检失败（平台自身不可信）</td><td class="bad">必须失败</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-title"><span class="n">FAQ</span><h2>常见问题</h2></div>
+    <details class="faq"><summary>支持哪些语言？</summary><div class="body">内置 Python（AST + pytest/unittest）、C（tree-sitter，无依赖时词法级回退）、Command（任意命令级接入）。通过插件模板可扩展更多语言与变异算子。</div></details>
+    <details class="faq"><summary>是否会上传我的代码？</summary><div class="body">不会。MetaTest 是本地优先工具，所有变异生成与测试执行都在你的机器 / 内网完成，不向任何外部服务发送代码。MVP 不做 SaaS。</div></details>
+    <details class="faq"><summary>如何接入 GitHub Actions / GitLab CI？</summary><div class="body">运行 <code>metatest ci github</code> 或 <code>metatest ci gitlab</code> 输出官方模板，按退出码（0 通过 / 1 门禁失败 / 3 自检失败）设置门禁即可。详见<a href="docs.html#ci">文档 · CI 集成</a>。</div></details>
+    <details class="faq"><summary>自检失败怎么办？</summary><div class="body">自检失败（退出码 3）说明平台自身判断不可信，此时一切结论都不可信，CI 必须失败。请检查环境（解释器 / 依赖），或提交 issue 附上自检日志。</div></details>
+    <details class="faq"><summary>等价变异体怎么处理？</summary><div class="body">等价变异（语义与原代码相同，不可能被杀死）不计入得分分母。可人工标记或启发式提示，避免拉低真实得分。</div></details>
+    <details class="faq"><summary>控制台能部署到公网给团队用吗？</summary><div class="body">不建议。控制台设计为仅本机单用户、无鉴权，文档明确不要把 <code>--host</code> 改成 <code>0.0.0.0</code>。团队共享建议走 CI 集成，而非公网暴露控制台。</div></details>
+  </div>
+</section>
+
+<!-- 底部 CTA -->
+<section style="padding:50px 0 70px">
+  <div class="wrap center">
+    <h2>让你的测试，真的能挡住 bug。</h2>
+    <p class="lead" style="margin:0 auto">先看示例报告，再花 5 分钟跑一次自检。</p>
+    <div class="row" style="justify-content:center">
+      <a class="btn primary" href="#start">开始评估 →</a>
+      <a class="btn accent" href="report.html">查看示例报告</a>
+      <a class="btn ghost" href="docs.html">阅读文档</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    MetaTest · 测试有效性评估与元测试平台 &nbsp;|&nbsp; 兼容 Windows / Linux / macOS（Python 3.10+）<br/>
+    <a href="./">首页</a> · <a href="docs.html">文档</a> · <a href="console.html">控制台</a> · <a href="docs.html#faq">FAQ</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

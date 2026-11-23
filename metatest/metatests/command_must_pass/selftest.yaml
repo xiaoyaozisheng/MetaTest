@@ -1,0 +1,5 @@
+case_id: command_must_pass
+description: 命令级接入基准（通过）：退出码 0 必须被判定为 pass（任意语言接入协议）
+kind: test_run
+expect:
+  outcome: pass

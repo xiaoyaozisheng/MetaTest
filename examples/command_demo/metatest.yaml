@@ -1,0 +1,20 @@
+# MetaTest 演示配置（命令级接入：任意语言项目）
+# 命令级接入提供：flaky 检测、测试结果校验、报告（无语法级变异）
+project:
+  name: command_demo
+  language: command
+  build_cmd: ""
+  test_cmd: "python check.py"
+  test_result_format: exit_code
+  source_roots: []
+  test_roots: []
+  parallelism: 1
+  timeout_sec: 60
+
+flaky:
+  enabled: false
+  runs: 3
+
+report:
+  formats: [html, json, junit_xml]
+  output_dir: .metatest/report

@@ -1,0 +1,8 @@
+case_id: py_weak_assert
+description: 弱断言基准：只执行不断言 / 断言常量 / 自比较断言必须被质量分析标记
+kind: weak_assert
+expect:
+  tests:
+    - test_no_assertion
+    - test_trivial_assert
+    - test_same_compare

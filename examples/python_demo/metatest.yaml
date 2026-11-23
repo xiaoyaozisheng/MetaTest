@@ -1,0 +1,30 @@
+# MetaTest 演示配置（Python 项目）
+project:
+  name: python_demo
+  language: python
+  build_cmd: ""
+  test_cmd: "python -m pytest -q"
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 4
+  timeout_sec: 60
+
+mutation:
+  operators: all
+  incremental: false
+  fail_fast: false
+
+quality_gate:
+  enabled: true
+  # 演示门禁：本示例测试有漏测，得分低于 85% 时退出码为 1
+  min_mutation_score: 85.0
+  max_weak_assertions: 0
+
+flaky:
+  enabled: false
+  runs: 3
+
+report:
+  formats: [html, json, junit_xml]
+  output_dir: .metatest/report

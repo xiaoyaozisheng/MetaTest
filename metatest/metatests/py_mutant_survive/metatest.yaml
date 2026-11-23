@@ -1,0 +1,16 @@
+project:
+  name: baseline_py_mutant_survive
+  language: python
+  build_cmd: ""
+  test_cmd: "python -m pytest -q"
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 2
+  timeout_sec: 30
+  mutation:
+    operators: [relational, condition_constant]
+  flaky:
+    enabled: false
+report:
+  formats: []

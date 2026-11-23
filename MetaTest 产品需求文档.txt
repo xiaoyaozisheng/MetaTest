@@ -1,0 +1,338 @@
+项目	内容
+产品名称	MetaTest
+文档版本	v0.1（草案）
+产品定位	测试有效性评估与元测试平台
+目标读者	产品、研发、测试、DevOps、开源贡献者
+核心技术路线	Python 主平台 + 语言适配器 + C 高性能/深度变异插件（可选）
+文档状态	待评审
+1. 背景与问题
+普通测试软件回答“产品有没有 bug”。MetaTest 回答三个更上层的问题：
+
+现有测试套件是否有效？ 测试通过不代表测试能发现问题。
+
+测试套件质量是否在退化？ 覆盖率、断言强度、flaky、冗余需要持续评估。
+
+测试工具本身是否可信？ 测试框架、CI、报告工具是否会把失败误报为通过、把跳过误判为成功？
+
+当前开源生态中，变异测试、flaky 检测、测试质量分析分别有工具，但缺少一个统一平台，更缺少系统性的“元测试层”——用已知答案的基准项目验证测试工具自身判断是否正确。
+
+MetaTest 的核心差异是：变异测试驱动的测试有效性评估 + 元测试自检 + 多语言适配器协议。
+
+2. 产品目标与成功指标
+2.1 产品目标
+提供统一 CLI/CI 平台，评估项目测试套件的有效性。
+
+MVP 深度支持 Python 和 C 项目变异测试。
+
+通过命令级适配器接入任意语言项目，至少支持 flaky 检测、测试结果校验和报告。
+
+建立元测试基准库，验证平台自身判断的准确性。
+
+输出可操作的报告：变异得分、漏测变异、flaky 测试、弱断言、工具自检结果。
+
+2.2 成功指标
+指标	MVP 目标
+Python/C 基准项目接入数	≥ 10 个
+元测试基准项目数	≥ 10 个
+平台自检通过率	100%
+变异结果误判率	< 5%（基于基准库）
+增量模式运行时间	中小项目单次评估 ≤ 10 分钟（可配置并行）
+CI 集成	支持 GitHub Actions / GitLab CI，退出码可用
+报告	HTML + JSON + JUnit XML
+等价变异体	支持人工标记和启发式过滤
+2.3 非目标
+不替代项目原有测试框架。
+
+不承诺零配置测试“所有项目”；“所有项目”指通过适配器协议接入。
+
+MVP 不做 SaaS 托管平台。
+
+MVP 不做 Java/JS 的深度语法级变异，仅命令级接入。
+
+不做完整测试管理平台（用例管理、需求管理、手工测试管理）。
+
+3. 用户与使用场景
+3.1 用户角色
+角色	需求
+测试工程师	评估测试套件是否有效，找漏测点
+开发工程师	在 CI 中设置测试质量门禁
+QA Lead	查看测试质量趋势和工具自检报告
+平台/DevOps 工程师	接入多语言项目，配置并行、沙箱、CI
+开源贡献者	开发语言适配器和变异算子插件
+3.2 核心场景
+本地评估：开发者运行 metatest run，查看变异得分和漏测变异。
+
+CI 增量门禁：PR 只对改动相关代码做增量变异，低于阈值则阻断。
+
+测试框架升级自检：升级 pytest/JUnit/CTest 后运行 metatest selftest，确认工具链没有误判。
+
+C 项目深度变异：通过 C 适配器对 Make/CMake/CTest 项目做变异测试。
+
+任意项目命令级接入：提供 build/test/result 格式即可接入 flaky 检测和结果校验。
+
+测试套件质量分析：检测 flaky、弱断言、重复测试、高覆盖率低变异得分。
+
+4. 产品范围与优先级
+4.1 P0（MVP 必须）
+Python CLI 主平台。
+
+项目配置与 metatest init。
+
+适配器协议：Python、C、命令级通用适配器。
+
+Python AST 变异，支持 10 个基础变异算子。
+
+C 基础变异：Clang AST / tree-sitter 方案二选一，支持 Make/CMake/CTest。
+
+变异执行调度：并行、超时、沙箱隔离。
+
+结果判定：killed / survived / timeout / equivalent / error。
+
+变异得分报告：HTML + JSON + JUnit XML。
+
+CI 集成与退出码。
+
+元测试 metatest selftest + 已知答案基准项目库。
+
+基础 flaky 检测：同一测试多次运行。
+
+增量变异：按改动文件/函数筛选变异体。
+
+4.2 P1（增强）
+弱断言检测、重复测试检测、只执行不断言检测。
+
+等价变异体启发式过滤和人工标记。
+
+C 高性能执行器插件（可选 C 实现）。
+
+GitHub Actions / GitLab CI 官方模板。
+
+测试质量趋势报告。
+
+插件市场/插件模板。
+
+4.3 P2（后续）
+Java/JS/Go 深度语法级变异适配器。
+
+Web 报告服务。
+
+多项目聚合看板。
+
+LLM 辅助等价变异体判定。
+
+SaaS 托管。
+
+5. 功能需求
+FR-01 项目接入与配置
+提供 metatest init 生成 metatest.yaml。
+
+配置包含：项目名、语言、构建命令、测试命令、结果格式、源码目录、测试目录、并行度、超时、变异算子白名单/黑名单、增量配置。
+
+支持本地路径和 CI 环境变量覆盖。
+
+示例：
+
+yaml
+project:
+  name: demo
+  language: python
+  build_cmd: ""
+  test_cmd: "pytest -q --junitxml=report.xml"
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 4
+  timeout_sec: 120
+  mutation:
+    operators: ["relational", "boolean", "return_value", "statement_deletion"]
+    incremental: true
+FR-02 适配器协议
+统一接口：detect()、prepare()、generate_mutants()、run_tests()、parse_result()、cleanup()。
+
+内置适配器：Python、C、Command。
+
+Command 适配器允许任意项目通过 build/test/result 格式接入。
+
+适配器以 Python 插件形式加载，支持第三方扩展。
+
+FR-03 Python 变异
+基于 AST 生成变异体。
+
+支持算子：关系运算符替换、算术运算符替换、布尔取反、返回值替换、删除语句、边界值修改、条件常量替换、None 替换、异常删除、循环条件修改。
+
+支持 pytest / unittest，结果解析 JUnit XML。
+
+FR-04 C 变异
+MVP 采用 Clang AST 或 tree-sitter 二选一，优先评估 Clang AST 精度。
+
+支持 Make / CMake / CTest。
+
+支持基础变异算子，与 Python 共享算子语义定义。
+
+预留 LLVM IR 级变异插件接口，后续可接 Mull 类方案。
+
+FR-05 变异执行调度
+每个变异体在独立工作目录或沙箱中执行。
+
+支持进程级隔离、超时 kill、资源限制。
+
+支持并行执行和失败快速跳过。
+
+支持缓存：未变更代码的变异结果可复用。
+
+FR-06 结果判定
+killed：测试失败，说明测试发现变异。
+
+survived：测试通过，说明测试漏测。
+
+timeout：执行超时，单独统计。
+
+equivalent：人工标记或启发式判定为等价变异。
+
+error：构建/执行错误，不计入得分但需报告。
+
+公式：Mutation Score = killed / (killed + survived + timeout)，等价变异体从分母排除。
+
+FR-07 测试质量分析
+Flaky 检测：同一测试重复运行，统计不稳定率。
+
+弱断言检测：只执行不断言、断言过少、断言常量。
+
+重复测试检测：相似测试用例识别。
+
+覆盖率与变异得分结合：标记“高覆盖率低变异得分”模块。
+
+输出可操作建议。
+
+FR-08 元测试自检
+metatest selftest 运行内置已知答案项目。
+
+基准项目类型：必失败、必通过、跳过、超时、弱断言、flaky、变异必杀死、变异必存活。
+
+验证平台是否正确报告、CI 退出码是否正确、报告是否一致。
+
+自检失败则平台自身不可信，CI 应失败。
+
+FR-09 报告与 CI
+报告格式：HTML、JSON、JUnit XML。
+
+报告内容：变异得分、killed/survived/timeout/equivalent/error 列表、漏测变异代码位置、flaky 列表、弱断言列表、自检结果、运行耗时。
+
+CLI 退出码：0 成功且达阈值；1 质量门禁失败；2 平台/配置错误；3 自检失败。
+
+提供 GitHub Actions / GitLab CI 示例。
+
+FR-10 插件机制
+变异算子插件、语言适配器插件、报告插件。
+
+插件声明版本兼容性。
+
+提供插件模板和最小示例。
+
+6. 非功能需求
+类别	要求
+性能	增量模式中小项目 ≤ 10 分钟；支持并行；支持超时和缓存
+隔离	变异执行在独立目录/进程/容器沙箱中，避免污染主工作区
+可扩展	适配器、变异算子、报告均可插件化
+可观测	结构化日志、运行指标、每变异体状态可追踪
+安全	默认不执行不可信配置中的任意命令；CI 中需显式允许；沙箱限制资源
+兼容	Python 3.10+；Linux/macOS 优先，Windows 后续
+可维护	核心与适配器解耦；基准库版本化
+隐私	不上传源码和测试结果到外部服务（MVP 本地运行）
+7. 架构与技术方案
+text
+metatest/
+├── cli/                 # CLI 入口
+├── core/                # 调度、沙箱、结果分析、报告
+├── adapters/            # python_adapter, c_adapter, command_adapter
+├── mutators/            # python_mutators, c_mutators
+├── metatests/           # 已知答案基准项目库
+├── plugins/             # 插件加载与模板
+└── report/              # HTML/JSON/JUnit 报告
+主平台：Python。
+
+C 高性能执行器：可选插件，用于沙箱、并行执行、覆盖率采集。
+
+C 变异引擎：MVP 用 Clang AST 或 tree-sitter；预留 LLVM IR 插件接口。
+
+结果统一输入：优先 JUnit XML，降低多语言接入成本。
+
+参考开源项目：muti、universalmutator、Mull、mutmut、cosmic-ray、sixth_sense、flakewall、flakeguard。MetaTest 不直接复制，而是在适配器协议和元测试层做集成创新。
+
+8. 数据模型（概念级）
+实体	关键字段
+ProjectConfig	name, language, build_cmd, test_cmd, result_format, source_roots, parallelism, timeout
+Mutant	id, file, line, operator, original, mutated, status
+TestRun	mutant_id, command, exit_code, duration, result_file
+AnalysisResult	mutation_score, killed, survived, timeout, equivalent, error
+QualityReport	flaky_tests, weak_assertions, duplicate_tests, high_coverage_low_mutation
+SelfTestResult	case_id, expected, actual, pass
+9. 里程碑与发布计划
+里程碑	内容	验收
+M0 原型	Python CLI + 配置 + Python AST 变异 + pytest 接入	跑通 1 个 Python 项目并输出变异得分
+M1 MVP	C 基础适配器 + 并行/超时/沙箱 + HTML/JSON/JUnit + CI 退出码	10 个基准项目接入，报告可用
+M2 元测试	selftest + 10 个已知答案项目 + flaky 基础检测	自检通过率 100%，CI 门禁可用
+M3 增强	弱断言/重复测试、等价变异过滤、插件模板、官方 CI 模板	P1 功能验收
+M4 扩展	新语言适配器、Web 报告、LLM 辅助判定	按路线图评审
+10. 风险与开放问题
+风险
+等价变异体：可能拉低得分可信度，需人工标记和启发式过滤。
+
+运行成本高：变异测试天然慢，必须依赖增量、并行、缓存和超时。
+
+C 解析复杂度：Clang AST 与 tree-sitter 各有取舍，需原型验证。
+
+沙箱安全：执行项目测试命令有安全风险，需明确信任边界。
+
+多语言适配成本：不能零配置覆盖所有项目，需管理预期。
+
+误判风险：平台自身判断错误会误导用户，元测试是必须项而非可选项。
+
+开放问题
+C 变异引擎 MVP 选 Clang AST 还是 tree-sitter？
+
+是否将 C 高性能执行器作为独立二进制插件发布？
+
+等价变异体是否引入 LLM 辅助判定？
+
+报告是否需要本地 Web 服务，还是纯静态 HTML？
+
+是否支持容器沙箱作为 MVP 可选项？
+
+11. 验收标准
+能对至少 5 个 Python 项目和 5 个 C 项目完成变异测试并生成报告。
+
+能通过 metatest selftest 正确识别必失败、跳过、超时、弱断言、flaky 基准项目。
+
+CI 退出码在质量门禁失败、自检失败、配置错误时符合定义。
+
+增量模式只对改动相关变异体执行，结果与全量模式一致（抽样验证）。
+
+报告包含变异得分、漏测变异位置、flaky 列表、自检结果。
+
+第三方可通过插件模板新增一个变异算子或命令级适配器。
+
+文档包含配置说明、CLI 说明、CI 示例和限制说明。
+
+12. 附录：MVP 变异算子清单
+关系运算符替换：> ↔ >=、< ↔ <=、== ↔ !=
+
+算术运算符替换：+ ↔ -、* ↔ /
+
+布尔值取反
+
+返回值替换
+
+删除语句
+
+边界值修改
+
+条件常量替换
+
+None/空指针替换
+
+异常删除
+
+循环条件修改
+
+总结： MetaTest 的 PRD 核心是“一个平台、三类能力、一个差异点”。三类能力是变异测试、测试质量分析、CI 集成；一个差异点是元测试自检。MVP 用 Python 主平台深度支持 Python/C，通过命令级适配器接入更多项目，不承诺零配置覆盖所有项目。

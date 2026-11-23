@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>MetaTest 报告 · python_demo</title><link rel="canonical" href="https://37ljik33e4m6n2cj4o6.traesite.cn/report.html" /><meta property="og:title" content="MetaTest 示例报告 · 变异测试结果" /><meta property="og:description" content="一份真实的变异测试报告示例：变异得分、killed/survived/timeout 分布与漏测代码定位。" /><meta property="og:type" content="article" /><meta property="og:url" content="https://37ljik33e4m6n2cj4o6.traesite.cn/report.html" /><meta property="og:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="MetaTest 示例报告 · 变异测试结果" /><meta name="twitter:image" content="https://37ljik33e4m6n2cj4o6.traesite.cn/og-image.jpg" /><style>
+:root { --bg:#0f1420; --card:#171e2e; --line:#2a3448; --tx:#dbe4f3; --dim:#8b97ad;
+  --ok:#3fb96f; --bad:#e0566b; --warn:#d9a13c; --info:#4f9cf9; --mut:#b388ff; }
+* { box-sizing:border-box; }
+body { margin:0; padding:32px 24px 64px; background:var(--bg); color:var(--tx);
+  font:14px/1.55 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif; }
+.wrap { max-width:1080px; margin:0 auto; }
+h1 { font-size:22px; margin:0 0 4px; }
+h2 { font-size:16px; margin:34px 0 12px; border-left:3px solid var(--info); padding-left:10px; }
+h3 { font-size:14px; margin:18px 0 8px; color:var(--dim); }
+.meta { color:var(--dim); font-size:12.5px; margin-bottom:20px; }
+.cards { display:flex; gap:12px; flex-wrap:wrap; margin:18px 0; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:10px;
+  padding:14px 18px; min-width:110px; }
+.card .num { font-size:24px; font-weight:600; }
+.card .lbl { color:var(--dim); font-size:12px; margin-top:2px; }
+.score-badge { display:inline-flex; align-items:baseline; gap:8px; background:var(--card);
+  border:1px solid var(--line); border-radius:12px; padding:12px 20px; }
+.score-badge .big { font-size:34px; font-weight:700; }
+.score-ok { color:var(--ok); } .score-mid { color:var(--warn); } .score-bad { color:var(--bad); }
+table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden; font-size:13px; }
+th, td { padding:7px 10px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+th { color:var(--dim); font-weight:600; background:rgba(255,255,255,.02); font-size:12px; }
+tr:last-child td { border-bottom:none; }
+.tag { display:inline-block; padding:1px 8px; border-radius:99px; font-size:11.5px; font-weight:600; }
+.tag.killed { background:rgba(63,185,111,.15); color:var(--ok); }
+.tag.survived { background:rgba(224,86,107,.18); color:var(--bad); }
+.tag.timeout { background:rgba(217,161,60,.18); color:var(--warn); }
+.tag.equivalent { background:rgba(179,136,255,.16); color:var(--mut); }
+.tag.error { background:rgba(224,86,107,.18); color:var(--bad); }
+.tag.pass { background:rgba(63,185,111,.15); color:var(--ok); }
+.tag.fail { background:rgba(224,86,107,.18); color:var(--bad); }
+code, pre { font-family:Consolas, "JetBrains Mono", monospace; font-size:12.5px; }
+pre { background:#0c111b; border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+  overflow-x:auto; margin:6px 0 0; }
+pre .hl { background:rgba(79,156,249,.14); display:inline-block; width:100%; border-radius:3px; }
+pre .add { color:var(--bad); }
+.delta { color:var(--mut); }
+.muted { color:var(--dim); }
+.ok-text { color:var(--ok); } .bad-text { color:var(--bad); } .warn-text { color:var(--warn); }
+.bar { background:#0c111b; border-radius:99px; height:8px; width:120px; overflow:hidden; display:inline-block; }
+.bar i { display:block; height:100%; background:var(--ok); }
+ul.suggestions li { margin:6px 0; }
+.note { color:var(--dim); font-size:12px; margin-top:6px; }
+a { color:var(--info); text-decoration:none; }
+</style></head>
+<body><a href="./" style="position:fixed;top:10px;left:10px;z-index:9999;background:#171e2e;border:1px solid #2a3448;color:#dbe4f3;padding:6px 12px;border-radius:8px;font:13px system-ui;text-decoration:none">← 返回 MetaTest 官网</a><div class="wrap">
+<h1>MetaTest 变异测试报告</h1>
+<div class="meta">项目 python_demo · 生成于 2026-11-23 15:59:14 ·
+耗时 2.9s · MetaTest v0.1.0</div><div class="score-badge"><span class="big score-ok">91.7%</span><span class="ok-text"><span class="ok-text">门禁阈值 85% · 达标</span></span></div><p class="note">基线测试：<span class="tag pass">pass</span> tests=7 failures=0 errors=0 skipped=0（2.8s）</p><p class="note">变异策略: <b>ast</b>  选择链 ast</p><div class="cards"><div class="card"><div class="num">12</div><div class="lbl">变异体总数</div></div><div class="card"><div class="num">11</div><div class="lbl">killed 已杀死</div></div><div class="card"><div class="num">1</div><div class="lbl">survived 漏测</div></div><div class="card"><div class="num">0</div><div class="lbl">timeout 超时</div></div><div class="card"><div class="num">0</div><div class="lbl">equivalent 等价</div></div><div class="card"><div class="num">0</div><div class="lbl">error 错误</div></div></div><h2>文件得分</h2><table><tr><th>文件</th><th>killed/计分</th><th>得分</th></tr><tr><td><code>src/calc.py</code></td><td>11/12</td><td><b>92%</b> <span class="bar"><i style="width:92%;background:#3fb96f"></i></span></td></tr></table><h2>漏测变异（survived）<span class='muted'> · 1 个</span></h2><table><tr><th>位置</th><th>状态</th><th>算子</th><th>变异内容</th></tr><tr><td><code>src/calc.py:16</code></td><td><span class='tag survived'>survived</span></td><td>arithmetic<br><span class='muted'>算术运算符替换：+ ↔ -、* ↔ /</span></td><td><code> * </code> <span class='delta'>→</span> <code class='add'> / </code><br><span class='muted'>算术运算符 * → /</span><pre>    13 │ 
+    14 │ 
+    15 │ def mul(a, b):
+→   16 │ <span class='hl'>    return a * b</span>
+    17 │ 
+    18 │ 
+    19 │ def div(a, b):</pre></td></tr></table></div></body></html>

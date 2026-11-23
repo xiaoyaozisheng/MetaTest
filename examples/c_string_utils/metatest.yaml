@@ -1,0 +1,19 @@
+project:
+  name: c_string_utils
+  language: c
+  build_cmd: "gcc -Isrc -o strutil_test.exe src/strutil.c tests/strutil_test.c"
+  test_result_format: exit_code
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 4
+  timeout_sec: 120
+  adapter:
+    test_binary: strutil_test.exe
+mutation:
+  operators: all
+quality_gate:
+  enabled: true
+  min_mutation_score: null
+report:
+  formats: [html, json, junit_xml]
+  output_dir: .metatest/report

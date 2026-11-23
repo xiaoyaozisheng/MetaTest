@@ -1,0 +1,18 @@
+project:
+  name: baseline_py_flaky
+  language: python
+  build_cmd: ""
+  test_cmd: "python -m pytest -q"
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 1
+  timeout_sec: 30
+  env:
+    # flaky 基准约定：状态文件写到沙箱外的绝对路径（由 selftest runner 注入），
+    # 使同一用例在多次运行间交替通过/失败
+    FLAKY_STATE_FILE: ".flaky_state"
+  flaky:
+    enabled: false
+report:
+  formats: []

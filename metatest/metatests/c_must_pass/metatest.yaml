@@ -1,0 +1,16 @@
+project:
+  name: baseline_c_must_pass
+  language: c
+  # 直接用 gcc 构建（无需 make/cmake）；产物名带 .exe 在 Windows/Linux 均可执行
+  build_cmd: "gcc -Isrc -o calc_test.exe src/calc.c tests/calc_test.c"
+  test_result_format: exit_code
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 2
+  timeout_sec: 60
+  adapter:
+    test_binary: calc_test.exe
+  flaky:
+    enabled: false
+report:
+  formats: []

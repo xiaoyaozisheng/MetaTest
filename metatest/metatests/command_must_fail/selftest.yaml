@@ -1,0 +1,5 @@
+case_id: command_must_fail
+description: 命令级接入基准（失败）：退出码非 0 必须被判定为 fail（不会误报为通过）
+kind: test_run
+expect:
+  outcome: fail

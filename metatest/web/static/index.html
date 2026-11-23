@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MetaTest · 测试有效性评估</title>
+<link rel="stylesheet" href="/styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f6feb'/%3E%3Cpath d='M9 22V10l7 8 7-8v12' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+          <path d="M9 22V10l7 8 7-8v12" stroke="#fff" stroke-width="2.4" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">MetaTest</div>
+        <div class="brand-sub" data-i18n="brand.sub">测试有效性评估</div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item" data-view="overview">
+        <svg viewBox="0 0 20 20" class="ico"><path d="M3 3h6v6H3zM11 3h6v4h-6zM11 9h6v8h-6zM3 11h6v6H3z"/></svg>
+        <span data-i18n="nav.overview">概览</span>
+      </button>
+      <button class="nav-item" data-view="run">
+        <svg viewBox="0 0 20 20" class="ico"><path d="M7 4l9 6-9 6z"/></svg>
+        <span data-i18n="nav.run">变异评估</span>
+      </button>
+      <button class="nav-item" data-view="quality">
+        <svg viewBox="0 0 20 20" class="ico"><path d="M3 15l4-5 3 3 4-6 3 4v4H3z"/></svg>
+        <span data-i18n="nav.quality">质量分析</span>
+      </button>
+      <button class="nav-item" data-view="selftest">
+        <svg viewBox="0 0 20 20" class="ico"><path d="M10 2l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4L5.5 16l.9-5L2.8 7.3l5-.7z"/></svg>
+        <span data-i18n="nav.selftest">元测试自检</span>
+      </button>
+      <button class="nav-item" data-view="project">
+        <svg viewBox="0 0 20 20" class="ico"><path d="M2 5h6l1.5 2H18v9H2z"/></svg>
+        <span data-i18n="nav.project">项目设置</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-project" id="sideProject"></div>
+
+    <div class="sidebar-foot">
+      <div class="seg" id="langSwitch">
+        <button data-lang="zh">中文</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <button class="icon-btn" id="themeToggle" title="Theme">
+        <svg viewBox="0 0 20 20" class="ico"><path d="M10 2a8 8 0 100 16 8 8 0 010-16zm0 2v12a6 6 0 010-12z"/></svg>
+      </button>
+      <span class="version" id="version"></span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs" id="crumbs">
+        <span class="crumb-muted" data-i18n="crumbs.none">未打开项目</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn ghost" id="btnOpenProject">
+          <svg viewBox="0 0 20 20" class="ico"><path d="M2 5h6l1.5 2H18v9H2z"/></svg>
+          <span data-i18n="action.openProject">打开项目</span>
+        </button>
+        <button class="btn primary" id="btnQuickRun">
+          <svg viewBox="0 0 20 20" class="ico"><path d="M7 4l9 6-9 6z"/></svg>
+          <span data-i18n="action.run">运行评估</span>
+        </button>
+      </div>
+    </header>
+    <section class="view" id="view"></section>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <h3 id="modalTitle" data-i18n="modal.pickProject">选择项目目录</h3>
+        <div class="modal-sub" id="modalPath"></div>
+      </div>
+      <button class="icon-btn" id="modalClose" aria-label="close">✕</button>
+    </div>
+    <div class="browser" id="browser"></div>
+    <div class="modal-foot">
+      <div class="hint" data-i18n="modal.hint">含 metatest.yaml 的目录会标记为已接入；其它目录可在打开后初始化。</div>
+      <div class="row-gap">
+        <button class="btn ghost" id="modalUp" data-i18n="modal.up">上一级</button>
+        <button class="btn primary" id="modalUse" data-i18n="modal.use">使用此目录</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+<script src="/app.js"></script>
+</body>
+</html>

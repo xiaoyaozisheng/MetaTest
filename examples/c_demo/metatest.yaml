@@ -1,0 +1,27 @@
+# MetaTest 演示配置（C 项目，直接 gcc，无需 make/cmake）
+# 如使用 CMake：删除 build_cmd/test_result_format，提供 CMakeLists.txt 即可（ctest 模式）
+project:
+  name: c_demo
+  language: c
+  build_cmd: "gcc -Isrc -o calc_test.exe src/calc.c tests/calc_test.c"
+  # Windows: calc_test.exe；Linux/macOS: 将 build_cmd 中 -o calc_test.exe 与下行 ./calc_test.exe 保持一致
+  test_result_format: exit_code
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 4
+  timeout_sec: 120
+  adapter:
+    test_binary: calc_test.exe
+    c_parser: auto          # tree_sitter（推荐，需 pip install metatest[c]）| fallback | auto
+
+mutation:
+  operators: all
+  # C 无异常机制，exception_removal 不会生成变异体
+
+quality_gate:
+  enabled: true
+  min_mutation_score: 80.0
+
+report:
+  formats: [html, json, junit_xml]
+  output_dir: .metatest/report

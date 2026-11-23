@@ -1,0 +1,29 @@
+# MetaTest CI 示例（GitLab CI）
+# 保存为 .gitlab-ci.yml
+stages: [quality]
+
+metatest-selftest:
+  stage: quality
+  image: python:3.12
+  script:
+    - pip install metatest
+    - metatest selftest          # 退出码 3 时流水线失败
+
+metatest-gate:
+  stage: quality
+  image: python:3.12
+  variables:
+    METATEST_ALLOW_COMMANDS: "1"
+  script:
+    - pip install metatest pytest
+    # 增量门禁：与目标分支 diff
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME || true
+    - >
+      metatest run --incremental
+      --diff-ref "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      --allow-commands || gate=$?; if [ "${gate:-0}" -ge 2 ]; then exit $gate; fi
+    # 退出码 1 = 质量门禁失败：按需阻断
+    - if [ "${gate:-0}" -eq 1 ]; then echo "Mutation score below gate" && exit 1; fi
+  artifacts:
+    when: always
+    paths: [.metatest/report/]

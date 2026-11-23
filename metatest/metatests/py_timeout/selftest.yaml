@@ -1,0 +1,6 @@
+case_id: py_timeout
+description: 超时基准：测试超过 timeout_sec 必须被判为 timeout（且进程被终止）
+kind: test_run
+timeout_sec: 2
+expect:
+  outcome: timeout

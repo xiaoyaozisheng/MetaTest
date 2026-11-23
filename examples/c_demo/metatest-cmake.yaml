@@ -1,0 +1,25 @@
+# MetaTest 演示配置（C 项目，CMake + CTest 模式）
+# 需要 cmake >= 3.21（--output-junit）。使用：metatest run --config metatest-cmake.yaml
+project:
+  name: c_demo_cmake
+  language: c
+  build_cmd: ""              # 留空：适配器自动 cmake -S . -B build && cmake --build
+  test_cmd: ""               # 留空：适配器自动 ctest --output-junit 产出 JUnit XML
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 4
+  timeout_sec: 300
+  adapter:
+    build_dir: build
+
+mutation:
+  operators: all
+
+quality_gate:
+  enabled: true
+  min_mutation_score: 80.0
+
+report:
+  formats: [html, json, junit_xml]
+  output_dir: .metatest/report

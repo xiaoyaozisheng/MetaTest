@@ -1,0 +1,10 @@
+case_id: c_lexical_guard
+description: C 词法防护基准：宏/字符串/注释区域不得产生变异体，代码区变异正常判定且零 error
+kind: mutation
+expect:
+  max_errors: 0        # 任何对宏/字符串的误伤都会产生编译错误变异 → error 计数必须为 0
+  mutants:
+    - path: src/guard.c
+      operator: arithmetic
+      lineno: 10       # return a + b + OFFSET;（唯一算术行）
+      status: killed

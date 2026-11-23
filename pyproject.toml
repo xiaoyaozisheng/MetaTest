@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metatest"
+version = "0.1.0"
+description = "MetaTest - 测试有效性评估与元测试平台（变异测试 + 元测试自检 + 多语言适配器协议）"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "MetaTest Contributors" }]
+keywords = ["mutation-testing", "test-quality", "flaky", "ci", "meta-testing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+# C 变异引擎：tree-sitter 方案（PRD FR-04：Clang AST / tree-sitter 二选一）
+c = ["tree-sitter>=0.22", "tree-sitter-c>=0.21"]
+dev = ["pytest>=8.0"]
+full = ["tree-sitter>=0.22", "tree-sitter-c>=0.21", "pytest>=8.0"]
+
+[project.scripts]
+metatest = "metatest.cli.main:main"
+metatest-ui = "metatest.web.launcher:main"
+
+[project.entry-points."metatest.plugins"]
+# 第三方插件可通过 entry point 注册（见 docs/adapters.md）
+
+[tool.setuptools.packages.find]
+include = ["metatest*"]
+
+[tool.setuptools.package-data]
+"metatest.metatests" = ["**/*.py", "**/*.yaml", "**/*.c", "**/*.h", "**/CMakeLists.txt", "**/Makefile", "**/*.md", "**/*.sh", "**/*.bat"]
+"metatest.plugins.templates" = ["*.py", "*.md"]
+"metatest.web" = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,19 @@
+project:
+  name: c_geom
+  language: c
+  build_cmd: "gcc -Isrc -o geom_test.exe src/geom.c tests/geom_test.c"
+  test_result_format: exit_code
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 4
+  timeout_sec: 120
+  adapter:
+    test_binary: geom_test.exe
+mutation:
+  operators: all
+quality_gate:
+  enabled: true
+  min_mutation_score: null
+report:
+  formats: [html, json, junit_xml]
+  output_dir: .metatest/report

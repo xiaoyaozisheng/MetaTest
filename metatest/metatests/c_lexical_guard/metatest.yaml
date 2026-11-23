@@ -1,0 +1,18 @@
+project:
+  name: baseline_c_lexical_guard
+  language: c
+  build_cmd: "gcc -Isrc -o guard_test.exe src/guard.c tests/guard_test.c"
+  test_result_format: exit_code
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 2
+  timeout_sec: 60
+  adapter:
+    test_binary: guard_test.exe
+    c_parser: auto
+  mutation:
+    operators: [relational, arithmetic, boundary_value]
+  flaky:
+    enabled: false
+report:
+  formats: []

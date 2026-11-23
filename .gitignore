@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# MetaTest 运行产物
+.metatest/
+coverage.xml
+
+# C 构建产物
+*.o
+*.obj
+*.exe
+*.dll
+build/
+cmake-build-*/
+
+# IDE
+.idea/
+.vscode/
+
+# 外部数据集（不进版本库）
+external/
+
+# 本地测试临时目录
+.pytest_tmp/
+.pytest_tmp2/
+
+# IDE / 工具产物（不进版本库）
+.trae-html-share-packages/
+.workbuddy/
+.screenshots/
+
+# 历史残留（与 MetaTest 无关）
+cloud-deploy-guide/

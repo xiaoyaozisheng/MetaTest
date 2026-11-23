@@ -1,0 +1,14 @@
+project:
+  name: baseline_py_timeout
+  language: python
+  build_cmd: ""
+  test_cmd: "python -m pytest -q"
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 1
+  timeout_sec: 2          # 已知答案：该套件必然超时（test_hangs 睡眠 30s）
+  flaky:
+    enabled: false
+report:
+  formats: []

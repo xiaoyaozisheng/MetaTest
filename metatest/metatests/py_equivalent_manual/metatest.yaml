@@ -1,0 +1,16 @@
+project:
+  name: baseline_py_equivalent_manual
+  language: python
+  build_cmd: ""
+  test_cmd: "python -m pytest -q"
+  test_result_format: junit_xml
+  source_roots: ["src"]
+  test_roots: ["tests"]
+  parallelism: 2
+  timeout_sec: 30
+  mutation:
+    operators: [statement_deletion, return_value, none_replacement]
+  flaky:
+    enabled: false
+report:
+  formats: []

@@ -1,0 +1,5 @@
+case_id: py_must_pass
+description: 必通过基准：测试全部通过且无跳过时，平台必须把结果判为 pass
+kind: test_run
+expect:
+  outcome: pass

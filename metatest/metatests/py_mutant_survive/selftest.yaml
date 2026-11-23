@@ -1,0 +1,13 @@
+case_id: py_mutant_survive
+description: 变异必存活基准：未被测试覆盖的分支，变异必须被报告为 survived（漏测）
+kind: mutation
+expect:
+  mutants:
+    - path: src/score.py
+      operator: condition_constant
+      lineno: 11       # 未测试分支 unused_branch 的 if 条件（第 10 行是注释）
+      status: survived
+    - path: src/score.py
+      operator: relational
+      lineno: 11
+      status: survived

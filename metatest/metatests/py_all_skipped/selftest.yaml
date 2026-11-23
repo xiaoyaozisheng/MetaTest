@@ -1,0 +1,5 @@
+case_id: py_all_skipped
+description: 全跳过基准：所有用例被跳过时必须判为 all_skipped（拒绝把"什么都没测"当通过）
+kind: test_run
+expect:
+  outcome: all_skipped

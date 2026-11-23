@@ -1,0 +1,10 @@
+case_id: py_equivalent_suspect
+description: 等价变异基准（启发式）：__repr__ 内返回值变异存活时必须带"疑似等价"标记
+kind: mutation
+expect:
+  mutants:
+    - path: src/point.py
+      operator: return_value
+      lineno: 7       # __repr__ 的 return（未被测试覆盖 → survived）
+      status: survived
+      suspect: true   # 启发式必须标记 suspect_equivalent（dunder 方法内返回值变异）

@@ -1,0 +1,5 @@
+case_id: py_skip
+description: 跳过基准：包含跳过用例的通过运行必须被识别为 pass_with_skips（跳过不等于通过）
+kind: test_run
+expect:
+  outcome: pass_with_skips
